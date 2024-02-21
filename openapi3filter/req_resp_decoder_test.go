@@ -825,7 +825,6 @@ func TestDecodeParameter(t *testing.T) {
 					},
 					found: true,
 				},
-
 				{
 					name: "deepObject explode nested object with nested array on different levels",
 					param: &openapi3.Parameter{
@@ -839,6 +838,48 @@ func TestDecodeParameter(t *testing.T) {
 					want: map[string]interface{}{
 						"obj":    map[string]interface{}{"nestedObjOne": map[string]interface{}{"items": []string{"baz"}}},
 						"objTwo": map[string]interface{}{"items": []string{"foo", "bar"}},
+					},
+					found: true,
+				},
+				{
+					name: "deepObject explode nested object anyOf",
+					param: &openapi3.Parameter{
+						Name: "param", In: "query", Style: "deepObject", Explode: explode,
+						Schema: objectOf(
+							"obj", anyofSchema,
+						),
+					},
+					query: "param[obj]=1",
+					want: map[string]interface{}{
+						"obj": 1,
+					},
+					found: true,
+				},
+				{
+					name: "deepObject explode nested object allOf",
+					param: &openapi3.Parameter{
+						Name: "param", In: "query", Style: "deepObject", Explode: explode,
+						Schema: objectOf(
+							"obj", allofSchema,
+						),
+					},
+					query: "param[obj]=1.123",
+					want: map[string]interface{}{
+						"obj": 1.123,
+					},
+					found: true,
+				},
+				{
+					name: "deepObject explode nested object oneOf",
+					param: &openapi3.Parameter{
+						Name: "param", In: "query", Style: "deepObject", Explode: explode,
+						Schema: objectOf(
+							"obj", oneofSchema,
+						),
+					},
+					query: "param[obj]=true",
+					want: map[string]interface{}{
+						"obj": true,
 					},
 					found: true,
 				},

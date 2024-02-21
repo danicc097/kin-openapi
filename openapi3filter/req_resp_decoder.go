@@ -914,6 +914,16 @@ func findNestedSchema(parentSchema *openapi3.SchemaRef, keys []string) (*openapi
 // The function returns an error when an error happened while parse object's properties.
 func makeObject(props map[string]string, schema *openapi3.SchemaRef) (map[string]interface{}, error) {
 	obj := make(map[string]interface{})
+
+	if len(schema.Value.AllOf) > 0 {
+		// TODO:
+	}
+	if len(schema.Value.AnyOf) > 0 {
+		// TODO:
+	}
+	if len(schema.Value.OneOf) > 0 {
+		// TODO:
+	}
 	for propName, propSchema := range schema.Value.Properties {
 		switch propSchema.Value.Type {
 		case "array":
