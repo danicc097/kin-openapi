@@ -970,6 +970,7 @@ func makeObject(props map[string]string, schema *openapi3.SchemaRef) (map[string
 			obj[propName] = value
 		}
 	}
+
 	return obj, nil
 }
 
