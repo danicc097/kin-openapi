@@ -1055,6 +1055,51 @@ func buildResObj(params map[string]interface{}, parentKeys []string, key string,
 	return nil, err
 }
 
+func convertArrayParameterToType(strArray []string, typ *openapi3.Types) (interface{}, error) {
+	var iarr []interface{}
+	switch {
+	case typ.Permits(openapi3.TypeBoolean):
+		for _, str := range strArray {
+			if str == "" {
+				continue
+			}
+			parsedBool, err := strconv.ParseBool(str)
+			if err != nil {
+				return nil, err
+			}
+			iarr = append(iarr, parsedBool)
+		}
+	case typ.Permits(openapi3.TypeInteger):
+		for _, str := range strArray {
+			if str == "" {
+				continue
+			}
+			parsedInt, err := strconv.Atoi(str)
+			if err != nil {
+				return nil, err
+			}
+			iarr = append(iarr, parsedInt)
+		}
+	case typ.Permits(openapi3.TypeNumber):
+		for _, str := range strArray {
+			if str == "" {
+				continue
+			}
+			parsedFloat, err := strconv.ParseFloat(str, 64)
+			if err != nil {
+				return nil, err
+			}
+			iarr = append(iarr, parsedFloat)
+		}
+	case typ.Permits(openapi3.TypeString):
+		return strArray, nil
+	default:
+		return nil, fmt.Errorf("unsupported parameter array type: %s", typ)
+	}
+
+	return iarr, nil
+}
+
 func handlePropParseError(path []string, err error) error {
 	if v, ok := err.(*ParseError); ok {
 		return &ParseError{path: pathFromKeys(path), Cause: v}
