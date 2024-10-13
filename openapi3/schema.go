@@ -2126,7 +2126,6 @@ type SchemaError struct {
 var _ interface{ Unwrap() error } = SchemaError{}
 
 func markSchemaErrorKey(err error, key string) error {
-
 	if v, ok := err.(*SchemaError); ok {
 		v.reversePath = append(v.reversePath, key)
 		if v.Origin != nil {
